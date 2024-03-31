@@ -36,16 +36,22 @@
 * 유효기간이 있다 ( 서버에서 정함 )
 * 보안이 취약하다 ( 아이디, 비번 그대로 노출 )
 
-![alt text](./img/쿠키.png)
+<p align="center">
+  <img src="./img/쿠키.png" width="580">
+</p>
 
 ## 🔖세션
 > 사용자가 웹사이트에 로그인했을 때 사용자에 대한 정보를 일정 기간 동안 서버에 기록하고 보관함으로써 사용자를 관리하기 위한 목적으로 사용되는 서버의 저장 공간이다. <br>⭐ Session은 사용자를 관리하는 서버 영역에 있다.
 
 ### 세션 ID 생성 및 저장
-![alt text](./img/세션ID생성.png)
+<p align="center">
+  <img src="./img/세션ID생성.png" width="550">
+</p>
 
 ### 세션 ID 전달 및 확인
-![alt text](./img/세션ID전달.png)
+<p align="center">
+  <img src="./img/세션ID전달.png" width="550">
+</p>
 
 ### 장점
 * 해당 아이디와 값을 빼앗겨도 빼앗긴 Session ID만 가지고는 사용자의 개인정보를 알 수 없다.
@@ -60,8 +66,9 @@
 
 ### JWT구조
 > 이게 뭐지....???? 할 수 있지만 일단 아 이런게 있구나 정도만 이해해보자 그 밑에 그게 왜 필요한지 설명해줄 것이니깐@~
-
-![alt text](./img/JWT.png)
+<p align="center">
+  <img src="./img/JWT.png" width="550">
+</p>
 
 #### Header
 > 토큰의 타입과 Verify Signature 값을 만드는데 사용될 해시 알고리즘 정의
@@ -112,10 +119,14 @@ HMACSHA256(
 ![alt text](./img/Signature.png)
 
 ### JWT 생성
-![alt text](./img/JWT생성.png)
+<p align="center">
+  <img src="./img/JWT생성.png" width="580">
+</p>
 
 ### JWT 유효성 검사
-![alt text](./img/JWT유효성검사.png)
+<p align="center">
+  <img src="./img/JWT유효성검사.png" width="580">
+</p>
 
 ### JWT 주의할 점
 1. JWT 탈취위험
