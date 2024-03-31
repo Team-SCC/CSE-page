@@ -70,7 +70,7 @@
   <img src="./img/JWT.png" width="550">
 </p>
 
-#### Header
+#### 📌 Header
 > 토큰의 타입과 Verify Signature 값을 만드는데 사용될 해시 알고리즘 정의
 * alq 부분을 none 이라고 하지 말고 HS256을 채워넣어야 함
   * 🤔 이유는 밑에!
@@ -81,7 +81,7 @@
 }
 ```
 
-#### Payload
+#### 📌 Payload
 > 전달할 데이터
 * Base64로 디코딩하면 JSON 형식으로 여러 정보를 확인할 수 있다
 * jwt는 변환이 쉬우므로 민감한 정보를 담으면 안된다(최소한의 정보만)
@@ -94,7 +94,7 @@
 }
 ```
 
-#### Verify Signature
+#### 📌 Verify Signature
 > 유효성 검증을 할 때 사용하는 고유한 암호화 코드
 * Header, Payload 는 Base64로 인코딩한 뒤
 * HS256 (Base64(Header) + Base64(Payload) + secret key) 해준다
@@ -128,7 +128,7 @@ HMACSHA256(
   <img src="./img/JWT유효성검사.png" width="580">
 </p>
 
-### JWT 주의할 점
+### ❌ JWT 주의할 점
 1. JWT 탈취위험
     * 사용 정지를 하기 힘들기 때문에 유효기간이 지날 때까지 기다려야 한다
     * JWT 블랙리스트 - 세션방식과 비슷해지는 단점
