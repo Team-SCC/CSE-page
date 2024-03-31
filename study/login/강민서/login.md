@@ -43,12 +43,12 @@
 ## 🔖세션
 > 사용자가 웹사이트에 로그인했을 때 사용자에 대한 정보를 일정 기간 동안 서버에 기록하고 보관함으로써 사용자를 관리하기 위한 목적으로 사용되는 서버의 저장 공간이다. <br>⭐ Session은 사용자를 관리하는 서버 영역에 있다.
 
-### 세션 ID 생성 및 저장
+### 📑 세션 ID 생성 및 저장
 <p align="center">
   <img src="./img/세션ID생성.png" width="550">
 </p>
 
-### 세션 ID 전달 및 확인
+### 📑 세션 ID 전달 및 확인
 <p align="center">
   <img src="./img/세션ID전달.png" width="550">
 </p>
@@ -118,15 +118,11 @@ HMACSHA256(
 
 ![alt text](./img/Signature.png)
 
-### JWT 생성
-<p align="center">
-  <img src="./img/JWT생성.png" width="580">
-</p>
+### 📑 JWT 생성
+![alt text](./img/JWT생성.png)
 
-### JWT 유효성 검사
-<p align="center">
-  <img src="./img/JWT유효성검사.png" width="580">
-</p>
+### 📑 JWT 유효성 검사
+![alt text](./img/JWT유효성검사.png)
 
 ### ❌ JWT 주의할 점
 1. JWT 탈취위험
