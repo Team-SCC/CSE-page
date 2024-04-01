@@ -132,8 +132,46 @@ HMACSHA256(
         * access token, refresh token 둘 다 사용
         * 그런데 refresh token을 탈취 당할 떄도 있어서 refresh token rotation이 필요
 
+## 🧐 Access Token, Refresh Token 어떻게 쓰는건데?
+🔍 위에서도 언급했듯이 JWT를 탈취당하면 사용 정지를 하기 힘들기 때문에 유효기간이 지날 때까지 기다려야 한다
+
+🔍 그럼 유효기간을 짧게하면 안되나..? 싶지만 짧게 하면 사용자가 로그인을 자주 해야한다는 불편함이 생기고 길게하면 탈취 문제를 해결할 수 없다
+
+💡 그래서 사용하는 방식이 2개의 JWT(Access Token, Refresh Token)를 사용하는 것이다!
+
+### 📑 JWT 생성
+![alt text](./img/Token.png)
+
+### 📑 Access Token 전달
+![alt text](./img/AccessToken.png)
+
+### 📑 Access Token 전달 (유효기간 지났을 때)
+![alt text](./img/AccessToken_2.png)
+
+### 📌 유효기간 어떻게 알아? : Payload
+: Payload에 작성되어있고 보통 다음과 같은 내용을 포함한다
+* iss: 토큰 발급자 (issuer)
+* sub: 토큰 제목 (subject)
+* aud: 토큰 대상자 (audience)
+* exp: 토큰의 만료시간 (expiraton)
+  * 시간은 NumericDate 형식으로 되어있어야 하며 (예: 1480849147370) 
+  * 언제나 현재 시간보다 이후로 설정되어야 한다
+* nbf: Not Before 를 의미
+  * 토큰의 활성 날짜와 비슷한 개념
+  * 여기에도 NumericDate 형식으로 날짜를 지정하며
+  * 이 날짜가 지나기 전까지는 토큰이 처리되지 않는다
+* iat: 토큰이 발급된 시간 (issued at)
+  * 이 값을 사용하여 토큰의 age 가 얼마나 되었는지 판단 할 수 있다
+* jti: JWT의 고유 식별자
+  * 주로 중복적인 처리를 방지하기 위하여 사용되고 일회용 토큰에 사용하면 유용하다
+
+### 📑 refresh token rotation
+Access Token를 재요청할 때마다 Refresh Token도 새로 발급받는 것
+
 ### 참고자료
 * [노마드코더 - 세션 vs 토큰 vs 쿠키? 기초개념 잡아드림. 10분 순삭!](https://www.youtube.com/watch?v=tosLBcAX1vk)
 * [쿠키 정의](https://www.cloudflare.com/ko-kr/learning/privacy/what-are-cookies/)
 * [세션의 뜻과 개념](https://www.ktpdigitallife.com/%EC%84%B8%EC%85%98session%EC%9D%98-%EB%9C%BB%EA%B3%BC-%EA%B0%9C%EB%85%90/)
 * [JWT 만드는 법](https://velog.io/@ddangle/JWT-%ED%86%A0%ED%81%B0-%EC%95%94%ED%98%B8%ED%99%94-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-HS256%EA%B3%BC-RS256)
+* [Access-Token과 Refresh-Token](https://velog.io/@chuu1019/Access-Token%EA%B3%BC-Refresh-Token%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%EC%99%9C-%ED%95%84%EC%9A%94%ED%95%A0%EA%B9%8C)
+* [Payload](https://velopert.com/2389)
