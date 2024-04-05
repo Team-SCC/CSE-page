@@ -71,7 +71,6 @@ async def read_results():
 
 > 기능을 메모리에 모아져있고, **호출시 해당 메모리로 이동한 후 반환되면 원래위치로 돌아오는** ***서브루틴*** 과 다르게 ***코루틴***은 기능이 메모리에 모아져있고, **호출 후 반환문이 없어도 동작을 중단하고 이후에 해당지점에서 진행재개 가능**하다.
 
-
 #### 비선점적 멀티태스킹이란?
 
 - 프로세스가 CPU를 할당 받으면 다른 프로세스가 차지 불가한 것
@@ -84,3 +83,120 @@ async def read_results():
 
 ---
 
+## FastAPI Docs - 첫걸음
+
+### 초기 라이브러리 설치
+
+```bash
+pip install "fastapi[all]"
+
+or
+
+pip install fastapi
+pip install uvicorn
+```
+
+> 위의 설치 명령어는 fastapi의 모든 관련 패키지를 다운로드 하는 명령어이고, 아래는 최소한으로 필요한 라이브러리 목록이다. 나는 "[all]"을 설치하였다.
+
+### uvicorn 이란?
+
+- 비동기 서버 인터페이스 제공 라이브러리
+- ***ASGI(Asynchronous Server Gateway Interface)*** 서버
+- 기존의 표준이었던 **WSGI(Web Server Gateway Interface) 서버**가 비동기 지원을 하지 않아서 ASGI 서버를 사용한다.
+
+> fastapi는 설치하지만, uvicorn은 무엇이길래 설치하나? 궁금해져서 찾아보았다.
+
+### 기본 코드
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+```
+
+> 라이브러리가 설치되어 있을 때, 파일명은 **main.py**로 한 후, 해당 코드를 작성하면 된다.
+
+### 실행 명령어
+
+```bash
+uvicorn main:app --reload 
+```
+
+- uvicorn: 비동기 서버 인터페이스 라이브러리
+- main: 실행하는 파이썬 파일명
+- app: FastAPI() 인스턴스 생성
+- --reload: 코드 변경시 자동으로 서버 재시작(디버깅, 개발 시에만 사용)
+
+### 일반적인 CRUD 메소드
+
+#### Create, 데이터 생성
+
+```python
+@app.post("/")
+async def root():
+    return {"message": "Hello World"}
+```
+
+- post 키워드를 사용한다.
+
+ #### Read, 데이터 읽기
+
+```python
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+```
+
+- get 키워드를 사용한다.
+
+#### Update, 데이터 수정
+
+```python
+@app.put("/")
+async def root():
+    return {"message": "Hello World"}
+```
+
+- put 키워드를 사용한다.
+
+#### Delect, 데이터 삭제
+
+```python
+@app.delete("/")
+async def root():
+    return {"message": "Hello World"}
+```
+
+- delete 키워드를 사용한다.
+
+### FastAPI 개발 docs
+
+```url
+localhost:port/docs
+```
+
+- 내가 개발한 API 문서를 제공하는 곳
+
+### FastAPI 개발 redoc
+
+```url
+localhost:port/redoc
+```
+
+- 대안 자동 문서를 제공하는 곳
+
+> 대안 자동 문서란 Alternative auto documentation으로 APi 문서를 자동으로 만들어주는 도구이다.
+
+### docs, redoc 차이점
+
+- docs: Swagger UI, 사용자 친화적 인터페이스
+- redoc: ReDoc UI, 좀 더 직관적인 인터페이스
+
+> 열심히 찾아봤지만, Swagger UI의 특징과 ReDoc UI의 특징은 딱히 없는듯...
+
+---
