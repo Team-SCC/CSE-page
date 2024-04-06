@@ -18,7 +18,10 @@ class User(BaseModel):
     id: int
     name: str
     number: int | None = None
-    friends: List[str] = []
+    friends: List[str] = []class ModelName(str, Enum):
+    alexnet = "alexnet"
+    resnet = "resnet"
+    lenet = "lenet"
 
 user = User({
     "id": 1,
@@ -198,5 +201,71 @@ localhost:port/redoc
 - redoc: ReDoc UI, 좀 더 직관적인 인터페이스
 
 > 열심히 찾아봤지만, Swagger UI의 특징과 ReDoc UI의 특징은 딱히 없는듯...
+
+---
+
+## FastAPI Docs - 경로 매개변수
+
+### 매개변수의 경로 지정
+
+```python
+@app.get("/users/me")
+async def read_user_me():
+    return {"user_id": "the current user"}
+
+@app.get("/users/{user_id}")
+async def read_user(user_id: str): # 매개변수 지정
+    return {"user_id": user_id}
+```
+
+```text
+접속 url
+localhost:port/users/me
+localhost:port/users/{int}
+```
+
+- {int}에는 아무 정수를 넣으면 된다.
+- "" 같은 것을 같이 넣지 않아도 숫자를 넣으면 int 형으로 인식한다.
+
+> 기본적으로 경로를 지정하는 방법이며, 동적으로 경로를 변경하고 싶을 때에는 ***매개변수***로 전달해 url을 동적으로 생성하면 된다.
+
+### Enum, 열거형 사용
+
+- Python 3.4 이후 사용 가능하다.
+- 파이썬의 List와 다르게 ***타입 안정성(의도와는 다른 타입으로 지정될 가능성)***을 지원한다.
+- s코드의 유지보수성이 증가한다.
+
+> 열거형이란 순서가 있는 인스턴스를 의미한다. 사용 예시로는 (배송전 - 배송중 - 배송완료) 같은 순서가 정해진 곳에서 사용
+
+```python
+from enum import Enum
+
+class ModelName(MemberDtype, Enum):
+    member1 = value1
+    member2 = value2
+    ...
+```
+
+```python
+from enum import Enum
+
+class Delivery(str, Enum): # 열거형의 멤버들은 str형을 가진다.
+    before = "배송전"
+    ing = "배송중"
+    after = "배송후"
+```
+
+> 위와 같이 사용 가능하다. FastAPI에서 이런 부분을 계속 강조하는 것보니 데이터의 타입 안정성을 매우 중요하게 생각하는 것 같다.
+
+### 파일 경로 매개변수로 전달
+
+```python
+@app.get("/files/{file_path: path}")
+async def read_file(file_path: str):
+    return {"file_path": file_path}
+```
+
+> 테스트를 해봤는데, 파일에 어떻게 접근해야되는지는 아직 모르겠다.
+> 나중에 다시 수정해야될 것 같다.
 
 ---
