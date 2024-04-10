@@ -24,7 +24,12 @@ async def login(username: str):
     
     # 쿠키로 세션 아이디를 전달
     response = {"session_id": session_id}
-    return response, {"headers": {"Set-Cookie": f"session_id={session_id}; Path=/"}}  # 쿠키 설정
+    
+    # 쿠키에 HttpOnly 속성을 추가하여 JavaScript에서 접근할 수 없게 만듦
+    cookie = f"session_id={session_id}; Path=/; HttpOnly"
+    
+    return response, {"headers": {"Set-Cookie": cookie}}
+
 
 # 클라이언트의 요청에 따라 세션 ID를 사용하여 세션 데이터를 반환하는 엔드포인트
 @app.get("/user/")
@@ -33,6 +38,8 @@ async def get_user(session_id: Optional[str] = Cookie(None)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="세션이 유효하지 않습니다.")
     return {"username": session_data[session_id]["username"]}
 ```
+
+## 세션 ID 생성
 
 ### 🔎 uuid4가 뭐야?
 >  UUID(Universally Unique Identifier)를 생성하기 위한 Python의 내장 모듈인 uuid 모듈에 있는 함수 중 하나다. UUID는 전 세계적으로 고유한 값을 생성하는 데 사용되는 표준 형식이다
@@ -58,6 +65,25 @@ async def get_user(session_id: Optional[str] = Cookie(None)):
 
 ![alt text](./img/uuid별.png)
 
+## 쿠키 생성
+
+### 🔎 Set-Cookie
+> Cookie는 http header에 포함되어있으므로 설정해주면 된다
+
+![alt text](./img/cookie_set.png)
+나는 위와 같이 쿠키를 설정해 줄 것이다!
+1. 쿠키에 데이터 넣기 🍽
+    * key: value 형식으로 이루어져 있다
+    * 여러개를 넣고 싶다면 session_id={session_id}; name=username; 그냥 여러개 만들어주면 된다^^
+2. 쿠키 전송범위 정하기💨
+
+    ![alt text](./img/cookie_range.png)
+
+3. HttpOnly로 보안강화하기
+   > HttpOnly는 웹 쿠키의 속성 중 하나로, 이 속성이 설정된 쿠키는 JavaScript를 통한 접근을 제한할 수 있다
+
+   > 악의적인 스크립트가 웹 페이지의 쿠키를 탈취하여 사용자의 개인 정보를 유출하려는 시도를 방지할 수 있기 때문에 만약 쿠키에 중요한 세션 정보나 사용자 인증 정보 등이 포함되어 있다면, 이러한 정보가 JavaScript로 탈취되는 것을 방지한다
 
 ### 참고자료
 * [uuid4란](https://yoonminlee.com/uuid-uniqueness-duplication)
+* [쿠키 전송범위](https://dololak.tistory.com/546)
