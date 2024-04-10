@@ -84,6 +84,24 @@ async def get_user(session_id: Optional[str] = Cookie(None)):
 
    > 악의적인 스크립트가 웹 페이지의 쿠키를 탈취하여 사용자의 개인 정보를 유출하려는 시도를 방지할 수 있기 때문에 만약 쿠키에 중요한 세션 정보나 사용자 인증 정보 등이 포함되어 있다면, 이러한 정보가 JavaScript로 탈취되는 것을 방지한다
 
+## 쿠키 전달받기
+![alt text](./img/cookie_re.png)
+
+1. Optional
+    * Python의 typing 모듈에서 제공하는 제네릭 타입 중 하나
+    * 값이 주어질 수도 있고, None일 수도 있는 타입을 나타내는데 Optional[str]은 문자열이거나 None일 수 있는 타입을 의미하는 것이다
+2. Cookie(None)
+    * 요청에서 해당하는 쿠키가 없을 경우에는 기본값으로 None이 할당
+
+💡 따라서 session_id: Optional[str] = Cookie(None)은 요청에서 session_id 쿠키를 추출하되, 해당 쿠키가 없는 경우에는 session_id 변수에 None을 할당하라는 것을 의미한다
+
+```python
+✅ 여러개 예시
+@app.get("/")
+async def read_cookies(session_id: Optional[str] = Cookie(None), other_cookie: Optional[str] = Cookie(None)):
+    return {"session_id": session_id, "other_cookie": other_cookie}
+```
+
 ### 참고자료
 * [uuid4란](https://yoonminlee.com/uuid-uniqueness-duplication)
 * [쿠키 전송범위](https://dololak.tistory.com/546)
