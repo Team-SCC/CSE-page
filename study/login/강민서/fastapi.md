@@ -79,7 +79,7 @@ async def get_user(session_id: Optional[str] = Cookie(None)):
 
     ![alt text](./img/cookie_range.png)
 
-3. HttpOnly로 보안강화하기
+3. HttpOnly로 보안강화하기 🧐
    > HttpOnly는 웹 쿠키의 속성 중 하나로, 이 속성이 설정된 쿠키는 JavaScript를 통한 접근을 제한할 수 있다
 
    > 악의적인 스크립트가 웹 페이지의 쿠키를 탈취하여 사용자의 개인 정보를 유출하려는 시도를 방지할 수 있기 때문에 만약 쿠키에 중요한 세션 정보나 사용자 인증 정보 등이 포함되어 있다면, 이러한 정보가 JavaScript로 탈취되는 것을 방지한다
