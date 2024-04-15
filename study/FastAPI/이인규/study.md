@@ -175,7 +175,7 @@ async def root():
 
 - post 키워드를 사용한다.
 
- #### Read, 데이터 읽기
+#### Read, 데이터 읽기
 
 ```python
 @app.get("/")
