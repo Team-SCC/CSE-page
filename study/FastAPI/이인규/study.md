@@ -2,6 +2,34 @@
 
 ## FastAPI Docs - 파이썬 타입 소개
 
+### 타입 힌트 Type Hint  사용하기
+
+```python
+def get_full_name(first_name: str, last_name: str):
+    full_name = first_name.title() + " " + last_name.title()
+    return full_name
+
+
+print(get_full_name("john", "doe"))
+```
+
+> 위와 같은 방식처럼 변수명: 데이터형 처럼 해당 데이터가 어떤 데이터형을 가지고 있는지 알려주는 역할을 한다. 어떤 데이터형인지 알 수 있으면 **에디터**의 도움을 받을 수 있다!
+
+#### 더 많은 타입 힌트 사용하기
+
+```python
+from typing import List
+
+
+def process_items(items: List[str]):
+    for item in items:
+        print(item)
+```
+
+- typing 라이브러리 사용
+
+> 위 처럼 라이브러리를 사용하면 평소에 사용하지 못했던 데이터 타입도 선언 가능하다!!
+
 ### Pydantic 모델
 
 - Pydantic은 데이터 검증(validation)을 위한 라이브러리입니다.
@@ -147,7 +175,7 @@ async def root():
 
 - post 키워드를 사용한다.
 
- #### Read, 데이터 읽기
+#### Read, 데이터 읽기
 
 ```python
 @app.get("/")
@@ -267,5 +295,64 @@ async def read_file(file_path: str):
 
 > 테스트를 해봤는데, 파일에 어떻게 접근해야되는지는 아직 모르겠다.
 > 나중에 다시 수정해야될 것 같다.
+
+---
+
+## FastAPI Docs - 쿼리 매개변수
+
+### 쿼리란?
+
+- Query
+- 데이터베이스에서 정보를 요청하거나 검색하기 위해 사용되는 구문
+
+> 즉 사용자(클라이언트)가 원하는 데이터가 있을 때, 쿼리문으로 정리해서 서버에 보내면 서버는 사용자(클라이언트)에게 쿼리에 해당하는 정보를 제공하는 것
+
+### typing 라이브러리의 Union
+
+> typing 라이브러리에는 Union이라는 데이터형이 존재한다. Union이란 데이터형이 여러 개를 가질 수 있음을 명시하는 것이다.
+
+```python
+from fastapi import FastAPI
+from typing import Union
+
+app = FastAPI()
+
+@app.get("student/{student_id}")
+async def read_student(student_id: int, nickname: Union[str, None] = None):
+    '''function sentence
+    '''
+```
+
+- student_id: 정수(int)를 **필수**로 가져야하는 매개변수
+- nickname: 문자열(str) 또는 None 값을 가져야하는 매개변수
+
+> 위와 같이 Union은 여러 개의 데이터형을 동시에 가질 수 있게 해준다. 물론! 데이터 타입 안정성 및 타입 힌트를 위한 것이기 때문에 인터프리터 상의 에러는 발생시키지 않고, 서버 구동 중 **404 Not Found** 같은 에러가 발생한다.
+
+### FastAPI에서 쿼리 매개변수 사용하기
+
+```python
+from fastapi import FastAPI
+from typing import Union
+
+app = FastAPI()
+
+@app.get("student/{student_id}")
+async def read_student(student_id: int, nickname: Union[str, None] = None):
+    '''function sentence
+    '''
+```
+
+#### 접속 url
+
+```bash
+localhost:port/student/10?nickname="Lee"
+or
+localhost:port/student/10
+```
+
+- 각 매개변수의 구분은 "?"로 한다.
+- 매개변수에 None 값이 허용된다면 해당 매개변수를 전달하지 않아도 된다.
+
+> 위의 코드 대로 코딩 후 url에 접근하면 쿼리 매개변수를 사용할 수 있다.
 
 ---
