@@ -133,7 +133,46 @@ sudo apt update
 
 > 기본적으로 문법은 다른 SQL과 같지만, 일부 다른 부분이 있으며, PostgreSQL 튜토리얼에서 설명해주고 있다.
 
-#### 테스트 테이블 생성
+#### 테스트 데이터베이스 생성
+
+```sql
+postgres=# CREATE DATABASE CSEPAGE
+```
+
+- 해당 명령어를 통해서 데이터베이스 생성이 가능
+
+#### SQL문으로 테이블 생성
+
+![테스트 테이블 그림](./src/image/testtable.png)
+
+```bash
+CREATE TABLE STUDENT (
+  ID SERIAL PRIMARY KEY,
+  NAME VARCHAR(16) NOT NULL,
+  GENDER VARCHAR(6) CHECK(GENDER IN('MALE', 'FEMALE')),
+  GRADE INT,
+  PHONE VARCHAR(11) CHECK(PHONE ~ '010-[0-9]{4}-[0-9]{4}'),
+  BIRTH DATE,
+  EMAIL VARCHAR(20) NOT NULL,
+  PASSWORD VARCHAR(1024),
+  NICKNAME VARCHAR(16),
+  AUTH INT NOT NULL CHECK(AUTH IN (0, 1, 2))
+);
+```
+
+- postgre에서는 'default' sql문을 지원하지 않음
+
+> 시퀀스를 사용하면 해결 가능함!
+
+```sql
+postgres=# SELECT * FROM STUDENT;
+                                     CSEPAGE
+ id | name | gender | grade | phone | birth | email | password | nickname | auth
+----+------+--------+-------+-------+-------+-------+----------+----------+------
+(0개 행)
+```
+
+> 잘 생성되었다!
 
 ### 참고자료
 
