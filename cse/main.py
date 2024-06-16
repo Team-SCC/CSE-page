@@ -37,3 +37,19 @@ def register_user(user: schemas.UserCreate):
     cursor.close()
     
     return {"message": "successfully"}
+
+# 학생 정보 수정
+@app.put("/student/info/{user_id}/")
+def update_user(user_id: int, user: schemas.UserUpdate):
+    # 비밀번호 암호화
+    hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
+
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE STUDENT SET NAME = %s, GENDER = %s, GRADE = %s, PHONE = %s, BIRTH = %s, "
+        "EMAIL = %s, PASSWORD = %s, NICKNAME = %s WHERE ID = %s;",
+        (user.name, user.gender, user.grade, user.phone, user.birth, user.email, hashed_password, user.nickname, user_id)
+    )
+    conn.commit()
+    cursor.close()
+    return {"message": "successfully"}
