@@ -81,10 +81,11 @@ async def register_user(user: schemas.UserCreate):
     
     return {"message": "successfully"}
 
-# 학생 정보 수정
-@app.put("/student/info/{user_id}/")
-async def update_user(user_id: int, user: schemas.UserUpdate, session_id: Optional[str] = Cookie(None)):
-    await get_user(session_id)
+@app.put("/student/info/")
+async def update_user(user: schemas.UserUpdate, session_id: Optional[str] = Cookie(None)):
+    # 세션 유효성 검사 및 사용자 ID 가져오기
+    user_info = await get_user(session_id)
+    user_id = user_info["id"]
     
     # 비밀번호 암호화
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
@@ -97,4 +98,4 @@ async def update_user(user_id: int, user: schemas.UserUpdate, session_id: Option
     )
     conn.commit()
     cursor.close()
-    return {"message": "successfully"}
+    return {"message": "successfully updated"}
