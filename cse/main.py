@@ -13,9 +13,50 @@ app = FastAPI()
 config = load_config()
 conn = psycopg2.connect(**config)
 
+
+# 임시
+session_data = {
+    "example_session_id": {"id": 1}
+}
+
+def generate_session_id():
+    return str(uuid4())
+
+async def get_user(session_id: Optional[str] = Cookie(None)):
+    if session_id is None or session_id not in session_data:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="세션이 유효하지 않습니다.")
+    return {"id": session_data[session_id]["id"]}
+
+@app.post("/login/")
+async def login(username: Optional[str] = None, session_id: Optional[str] = Cookie(None)):
+    if session_id:
+        # 세션이 유효한지 확인
+        try:
+            user = await get_user(session_id)
+            return {"message": "세션이 유효합니다.", "user_id": user["id"]}
+        except HTTPException:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="username이나 유효한 session_id가 필요합니다.")
+
+    if username:
+        # 사용자 이름이 제공되었을 경우 세션 생성
+        new_session_id = generate_session_id()
+        user_id = ...  # 사용자의 ID를 가져오는 로직 필요 (예: 데이터베이스 조회)
+        session_data[new_session_id] = {"id": user_id}
+        
+        # 쿠키로 세션 아이디를 전달
+        response = {"message": "로그인 성공", "session_id": new_session_id}
+        
+        # 쿠키에 HttpOnly 속성을 추가하여 JavaScript에서 접근할 수 없게 만듦
+        cookie = f"session_id={new_session_id}; Path=/; HttpOnly"
+        
+        return response, {"headers": {"Set-Cookie": cookie}}
+    
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="username이나 유효한 session_id가 필요합니다.")
+
+
 # 학생 등록 - (수정) 나중에 파일 올리면 등록되게 하는것으로 수정
 @app.post("/student/info/")
-def register_user(user: schemas.UserCreate):
+async def register_user(user: schemas.UserCreate):
     cursor = conn.cursor()
     # 이미 존재하는지 확인
     cursor.execute(
@@ -42,7 +83,9 @@ def register_user(user: schemas.UserCreate):
 
 # 학생 정보 수정
 @app.put("/student/info/{user_id}/")
-def update_user(user_id: int, user: schemas.UserUpdate):
+async def update_user(user_id: int, user: schemas.UserUpdate, session_id: Optional[str] = Cookie(None)):
+    await get_user(session_id)
+    
     # 비밀번호 암호화
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
 
