@@ -99,3 +99,32 @@ async def update_user(user: schemas.UserUpdate, session_id: Optional[str] = Cook
     conn.commit()
     cursor.close()
     return {"message": "successfully updated"}
+        
+async def get_user_info(session_id: Optional[str] = Cookie(None)):
+    user_info = await get_user(session_id)
+    user_id = user_info["id"]
+    
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "SELECT ID, NAME, GENDER, GRADE, PHONE, BIRTH, EMAIL, NICKNAME FROM STUDENT WHERE ID = %s;",
+            (user_id,)
+        )
+        result = cursor.fetchone()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="사용자를 찾을 수 없습니다.")
+        
+        user_data = {
+            "id": result[0],
+            "name": result[1],
+            "gender": result[2],
+            "grade": result[3],
+            "phone": result[4],
+            "birth": result[5],
+            "email": result[6],
+            "nickname": result[7]
+        }
+    finally:
+        cursor.close()
+    
+    return user_data
