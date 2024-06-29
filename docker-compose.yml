@@ -1,0 +1,12 @@
+services:
+  cse_postgres:
+    image: postgres:latest
+    container_name: cse_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: q1w2e3r4
+      TZ: Asia/Seoul
+    volumes:
+      - /home/cse/pgdata:/var/lib/postgresql/data
+    restart: always

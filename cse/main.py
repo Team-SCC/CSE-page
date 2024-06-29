@@ -1,6 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, status, Cookie
 import bcrypt
 import psycopg2
+from typing import Optional
+from uuid import uuid4
 
 from config import load_config
 import schemas
@@ -53,3 +55,31 @@ def update_user(user_id: int, user: schemas.UserUpdate):
     conn.commit()
     cursor.close()
     return {"message": "successfully"}
+
+# 임시
+session_data = {}
+
+def generate_session_id():
+    return str(uuid4())
+
+@app.post("/login/")
+async def login(username: str):
+    session_id = generate_session_id()
+    session_data[session_id] = {"id": id}
+    
+    # 쿠키로 세션 아이디를 전달
+    response = {"session_id": session_id}
+    
+    # 쿠키에 HttpOnly 속성을 추가하여 JavaScript에서 접근할 수 없게 만듦
+    cookie = f"session_id={session_id}; Path=/; HttpOnly"
+    
+    print(session_id)
+    
+    return response, {"headers": {"Set-Cookie": cookie}}
+
+# 클라이언트의 요청에 따라 세션 ID를 사용하여 세션 데이터를 반환하는 엔드포인트
+@app.get("/user/")
+async def get_user(session_id: Optional[str] = Cookie(None)):
+    if session_id is None or session_id not in session_data:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="세션이 유효하지 않습니다.")
+    return {"id": session_data[session_id]["id"]}
